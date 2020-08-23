@@ -1,30 +1,30 @@
 package util
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
-	"runtime"
+    "fmt"
+    "os"
+    "os/exec"
+    "runtime"
 
-	. "github.com/logrusorgru/aurora"
+    . "github.com/logrusorgru/aurora"
 )
 
 func Clear() {
-	var cmd *exec.Cmd
+    var cmd *exec.Cmd
 
-	switch runtime.GOOS {
-	case "linux", "darwin":
-		cmd = exec.Command("clear")
-	case "windows":
-		cmd = exec.Command("cmd", "/c", "cls")
-	default:
-		cmd = nil
-	}
+    switch runtime.GOOS {
+    case "linux", "darwin":
+        cmd = exec.Command("clear")
+    case "windows":
+        cmd = exec.Command("cmd", "/c", "cls")
+    default:
+        cmd = nil
+    }
 
-	if cmd != nil {
-		cmd.Stdout = os.Stdout
-		cmd.Run()
-	} else {
-		fmt.Println(Yellow("Warning:"), "cannot clear console")
-	}
+    if cmd != nil {
+        cmd.Stdout = os.Stdout
+        cmd.Run()
+    } else {
+        fmt.Println(Yellow("Warning:"), "cannot clear console")
+    }
 }
