@@ -57,6 +57,8 @@ node {
                 break
         }
 
+        println "Current Version: ${currentVersion}"
+
         VERSION_NUMBER = currentVersion.join(".")
 
         println "New Version: ${VERSION_NUMBER}"
