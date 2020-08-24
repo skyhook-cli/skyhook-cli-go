@@ -14,6 +14,36 @@ node {
     stage("PR TITLE CHECK") {
         if (isPr()) {
             assert env.CHANGE_TITLE ==~ /(patch|minor|major):.+/
+
+            // VERSION UPDATE CODE
+            def pushType = COMMIT_MESSAGE.split()[0].toLowerCase().replace(":", "")
+            def currentVersion = sh(
+                script: "git describe --tags",
+                returnStdout: true
+            ).trim().tokenize(".")
+
+            println "Current Version: ${currentVersion}"
+
+            switch(pushType) {
+                case "patch":
+                    currentVersion[2] = currentVersion[2].toInteger() + 1
+                    break
+                case "minor":
+                    currentVersion[1] = currentVersion[1].toInteger() + 1
+                    break
+                case "major":
+                    currentVersion[0] = currentVersion[0].toInteger() + 1
+                    break
+                default:
+                    break
+            }
+
+            VERSION_NUMBER = currentVersion.join(".")
+
+            println "New Version: ${VERSION_NUMBER}"
+            // END VERSION UPDATE CODE
+
+            sh "exit 1"
         } else {
             Utils.markStageSkippedForConditional(STAGE_NAME)
         }
