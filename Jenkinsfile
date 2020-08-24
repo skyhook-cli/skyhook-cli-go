@@ -58,7 +58,6 @@ node {
                     println "Major update"
                     currentVersion[0] = currentVersion[0].toInteger() + 1
                     break
-                case "patch":
                 default:
                     println "Patch update"
                     currentVersion[2] = currentVersion[2].toInteger() + 1
