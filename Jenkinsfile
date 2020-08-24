@@ -39,28 +39,32 @@ node {
     stage("VERSION UPDATE") {
         if (isPushToMaster()) {
             def pushType = COMMIT_MESSAGE.split()[0].toLowerCase().replace(":", "")
+
             def currentVersion = sh(
-                script: "git describe --tags",
+                script: "git describe --abbrev=0",
                 returnStdout: true
-            ).trim().tokenize(".")
+            ).trim()
+
+            currentVersion = currentVersion.replace("v", "").replace("-release", "").tokenize(".")
+
+            println "Current Version: ${currentVersion}"
 
             switch(pushType) {
-                case "patch":
-                    currentVersion[2] = currentVersion[2].toInteger() + 1
-                    break
                 case "minor":
                     currentVersion[1] = currentVersion[1].toInteger() + 1
                     break
                 case "major":
                     currentVersion[0] = currentVersion[0].toInteger() + 1
                     break
+                case "patch":
                 default:
+                    currentVersion[2] = currentVersion[2].toInteger() + 1
                     break
             }
 
             VERSION_NUMBER = currentVersion.join(".")
 
-            println "New Version: " + VERSION_NUMBER
+            println "New Version: ${VERSION_NUMBER}"
 
             withCredentials([
                 usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
