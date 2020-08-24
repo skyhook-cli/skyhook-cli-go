@@ -60,6 +60,8 @@ node {
 
             VERSION_NUMBER = currentVersion.join(".")
 
+            println "New Version: " + VERSION_NUMBER
+
             withCredentials([
                 usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
             ]) {
