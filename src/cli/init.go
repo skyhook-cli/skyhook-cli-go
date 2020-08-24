@@ -2,7 +2,10 @@ package cli
 
 import (
 	"bufio"
+	"fmt"
 	"os"
+
+	"github.com/logrusorgru/aurora"
 
 	"github.com/skyhook-cli/skyhook-cli-go/model"
 )
@@ -11,31 +14,35 @@ import (
 RunInit is the entrypoint for creating a new project
 */
 func RunInit() {
-	p := model.Prompt{
-		Name:     "InfraOrApp",
-		Question: "Is this an Infrastructure repo or an Application repo?",
-		Response: "",
-		Choices:  []string{"infra", "app"},
-		Default:  "infra",
-	}
-	a := []model.Prompt{p}
+	infraOrApp := model.InitializeInfraOrApp()
+
 	reader := bufio.NewReader(os.Stdin)
-	for i := range a {
-		p := &a[i]
+	infraOrApp.PrintPrompt()
+	infraOrApp.ReadResponse(reader)
+
+	config := model.Config{
+		InfraOrApp: infraOrApp.Response,
+		Parameters: make(map[string]string),
+	}
+	var params []model.Prompt
+
+	switch infraOrApp.Response {
+	case "infra":
+		params = model.InitializeInfraPrompts()
+	case "app":
+		params = model.InitializeAppPrompts()
+	default:
+		fmt.Println(aurora.Red("invalid option!"))
+		os.Exit(1)
+	}
+
+	for i := range params {
+		p := &params[i]
 		p.PrintPrompt()
 		p.ReadResponse(reader)
+
+		config.Parameters[p.Name] = p.Response
 	}
 
-	var c model.Config
-	if a[0].Response == "infra" {
-		c = model.InfraConfig{
-			InfraOrApp: a[0].Response,
-		}
-	} else if a[0].Response == "app" {
-		c = model.AppConfig{
-			InfraOrApp: a[0].Response,
-		}
-	}
-
-	c.SaveConfig()
+	config.SaveConfig()
 }

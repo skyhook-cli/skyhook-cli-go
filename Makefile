@@ -14,4 +14,4 @@ format:
 
 clean:
 	rm -rf bin
-	rm -rf **/Tetherfile
+	rm -rf Tetherfile **/Tetherfile

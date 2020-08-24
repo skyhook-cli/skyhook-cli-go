@@ -55,11 +55,23 @@ ReadResponse reads the user input into the Response field of the prompt
 */
 func (p *Prompt) ReadResponse(r *bufio.Reader) {
 
-	text := util.ReadText(r)
+	text := inputOrDefault(util.ReadText(r), p.Default)
+	isValid := p.ValidateResponse(text)
 
-	if !p.ValidateResponse(text) {
+	for !isValid {
 		fmt.Println(aurora.Red("invalid response"))
-	} else {
-		p.Response = text
+		p.PrintPrompt()
+
+		text = inputOrDefault(util.ReadText(r), p.Default)
+		isValid = p.ValidateResponse(text)
 	}
+
+	p.Response = text
+}
+
+func inputOrDefault(input string, defaultChoice string) string {
+	if len(input) == 0 {
+		return defaultChoice
+	}
+	return input
 }
