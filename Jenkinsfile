@@ -39,7 +39,7 @@ node {
             returnStdout: true
         ).trim()
 
-        currentVersion.replace("v", "").replace("-release", "").tokenize(".")
+        currentVersion = currentVersion.replace("v", "").replace("-release", "").tokenize(".")
 
         println "Current Version: ${currentVersion}"
 
