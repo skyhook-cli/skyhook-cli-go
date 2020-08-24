@@ -33,6 +33,9 @@ node {
 
         // VERSION UPDATE CODE
         def pushType = COMMIT_MESSAGE.split()[0].toLowerCase().replace(":", "")
+
+        sh "git describe --tags"
+
         def currentVersion = sh(
             script: "git describe --tags",
             returnStdout: true
