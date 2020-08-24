@@ -8,22 +8,34 @@ import (
 
 const filename string = "./Tetherfile"
 
+/*
+Config represents the user's input
+*/
 type Config interface {
 	SaveConfig() error
 	ReadConfig() (Config, error)
 }
 
+/*
+AppParams are config options specific to an app project
+*/
 type AppParams struct {
 	ContainerPlatform string `yaml:"containerPlatform"`
 	DockerImage       string `yaml:"dockerImage"`
 	AppName           string `yaml:"appName"`
 }
 
+/*
+AppConfig is a concrete Config for app projects
+*/
 type AppConfig struct {
 	InfraOrApp string    `yaml:"infraOrApp"`
 	AppParams  AppParams `yaml:"appParams"`
 }
 
+/*
+InfraParams are config options specific to an infra project
+*/
 type InfraParams struct {
 	ProjectName           string `yaml:"projectName"`
 	ContainerPlatform     string `yaml:"containerPlatform"`
@@ -38,11 +50,17 @@ type InfraParams struct {
 	SeleniumAdminPassword string `yaml:"seleniumAdminPassword"`
 }
 
+/*
+InfraConfig is a concrete Config for infra projects
+*/
 type InfraConfig struct {
 	InfraOrApp  string      `yaml:"infraOrApp"`
 	InfraParams InfraParams `yaml:"infraParams"`
 }
 
+/*
+SaveConfig writes the config to a yaml file
+*/
 func (c AppConfig) SaveConfig() error {
 	bytes, err := yaml.Marshal(c)
 	if err != nil {
@@ -52,6 +70,9 @@ func (c AppConfig) SaveConfig() error {
 	return ioutil.WriteFile(filename, bytes, 0664)
 }
 
+/*
+ReadConfig reads the yaml file into the config struct
+*/
 func (c AppConfig) ReadConfig() (Config, error) {
 	bytes, err := ioutil.ReadFile(filename)
 
@@ -68,6 +89,9 @@ func (c AppConfig) ReadConfig() (Config, error) {
 	return c, nil
 }
 
+/*
+SaveConfig writes the config to a yaml file
+*/
 func (c InfraConfig) SaveConfig() error {
 	bytes, err := yaml.Marshal(c)
 	if err != nil {
@@ -77,6 +101,9 @@ func (c InfraConfig) SaveConfig() error {
 	return ioutil.WriteFile(filename, bytes, 0664)
 }
 
+/*
+ReadConfig reads the yaml file into the config struct
+*/
 func (c InfraConfig) ReadConfig() (Config, error) {
 	bytes, err := ioutil.ReadFile(filename)
 

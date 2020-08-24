@@ -6,9 +6,12 @@ import (
 	"os/exec"
 	"runtime"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
+/*
+Clear the terminal
+*/
 func Clear() {
 	var cmd *exec.Cmd
 
@@ -25,6 +28,6 @@ func Clear() {
 		cmd.Stdout = os.Stdout
 		cmd.Run()
 	} else {
-		fmt.Println(Yellow("Warning:"), "cannot clear console")
+		fmt.Println(aurora.Yellow("Warning:"), "cannot clear console")
 	}
 }
