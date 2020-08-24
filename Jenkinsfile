@@ -41,7 +41,7 @@ node {
             def pushType = COMMIT_MESSAGE.split()[0].toLowerCase().replace(":", "")
 
             def currentVersion = sh(
-                script: "git describe --abbrev=0",
+                script: "git describe --abbrev=0 --tags",
                 returnStdout: true
             ).trim()
 
