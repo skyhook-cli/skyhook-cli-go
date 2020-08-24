@@ -68,19 +68,6 @@ node {
 
             println "New Version: ${VERSION_NUMBER}"
 
-            withCredentials([
-                usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
-            ]) {
-                def origin = "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/skyhook-cli/skyhook-cli-go.git"
-                sh """
-                    git config user.name "Skyhook Bot"
-                    git config user.email "skyhookbot"
-
-                    git tag -a ${VERSION_NUMBER} -m "New tag v${VERSION_NUMBER}"
-
-                    git push ${origin} ${VERSION_NUMBER}
-                """
-            }
         } else {
             Utils.markStageSkippedForConditional(STAGE_NAME)
         }
