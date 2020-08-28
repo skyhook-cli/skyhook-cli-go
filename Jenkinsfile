@@ -94,7 +94,7 @@ node {
                         "tag_name": "v${VERSION_NUMBER}-release",
                         "target_commitish": "master",
                         "name": "Release v${VERSION_NUMBER}",
-                        "body": "\$(git log --pretty=%B master...v${OLD_VERSION}-release"
+                        "body": "\$(git log --pretty=%B master...v${OLD_VERSION}-release)"
                     }'
                 """
             }
