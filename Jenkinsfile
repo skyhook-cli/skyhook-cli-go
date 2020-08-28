@@ -3,6 +3,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 def REPO_URL = "https://github.com/skyhook-cli/skyhook-cli-go.git"
 
 def COMMIT_MESSAGE
+def OLD_VERSION
 def VERSION_NUMBER
 
 node {
@@ -10,14 +11,6 @@ node {
                 [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false]])
 
     deleteDir()
-
-    stage("PR TITLE CHECK") {
-        if (isPr()) {
-            assert env.CHANGE_TITLE ==~ /(patch|minor|major):.+/
-        } else {
-            Utils.markStageSkippedForConditional(STAGE_NAME)
-        }
-    }
 
     stage("GIT CHECKOUT") {
         git(
@@ -45,7 +38,9 @@ node {
                 returnStdout: true
             ).trim()
 
-            currentVersion = currentVersion.replace("v", "").replace("-release", "").tokenize(".")
+            OLD_VERSION = currentVersion.replace("v", "").replace("-release", "")
+
+            currentVersion = OLD_VERSION.tokenize(".")
 
             println "Current Version: ${currentVersion}"
 
@@ -99,7 +94,7 @@ node {
                         "tag_name": "v${VERSION_NUMBER}-release",
                         "target_commitish": "master",
                         "name": "Release v${VERSION_NUMBER}",
-                        "body": "Automated release v${VERSION_NUMBER}"
+                        "body": "\$(git log --pretty=%B master...v${OLD_VERSION}-release"
                     }'
                 """
             }
