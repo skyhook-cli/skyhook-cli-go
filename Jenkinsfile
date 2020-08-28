@@ -12,14 +12,6 @@ node {
 
     deleteDir()
 
-    stage("PR TITLE CHECK") {
-        if (isPr()) {
-            assert env.CHANGE_TITLE ==~ /(patch|minor|major):.+/
-        } else {
-            Utils.markStageSkippedForConditional(STAGE_NAME)
-        }
-    }
-
     stage("GIT CHECKOUT") {
         git(
             url: "${REPO_URL}",
