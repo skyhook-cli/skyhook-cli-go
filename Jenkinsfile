@@ -3,6 +3,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 def REPO_URL = "https://github.com/skyhook-cli/skyhook-cli-go.git"
 
 def COMMIT_MESSAGE
+def OLD_VERSION
 def VERSION_NUMBER
 
 node {
@@ -45,7 +46,9 @@ node {
                 returnStdout: true
             ).trim()
 
-            currentVersion = currentVersion.replace("v", "").replace("-release", "").tokenize(".")
+            OLD_VERSION = currentVersion.replace("v", "").replace("-release", "")
+
+            currentVersion = OLD_VERSION.tokenize(".")
 
             println "Current Version: ${currentVersion}"
 
@@ -99,7 +102,7 @@ node {
                         "tag_name": "v${VERSION_NUMBER}-release",
                         "target_commitish": "master",
                         "name": "Release v${VERSION_NUMBER}",
-                        "body": "Automated release v${VERSION_NUMBER}"
+                        "body": "\$(git log --pretty=%B master...v${OLD_VERSION}-release"
                     }'
                 """
             }
