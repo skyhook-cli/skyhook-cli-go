@@ -13,7 +13,7 @@ func InitializeAppPrompts() []Prompt {
 		},
 		{
 			Name:     "dockerImage",
-			Question: "Enter the docker image name for this app (e.g. repository/namespace/image:tag):",
+			Question: "Enter the docker image name for this app (e.g. registry/namespace/image:tag):",
 		},
 		{
 			Name:     "appName",

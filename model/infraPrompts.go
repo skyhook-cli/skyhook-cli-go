@@ -27,13 +27,13 @@ func InfraContainerPlatform() []Prompt {
 }
 
 /*
-InfraRepository returns a prompt to get the desired docker container repository
+InfraRegistry returns a prompt to get the desired docker container registry
 */
-func InfraRepository() []Prompt {
+func InfraRegistry() []Prompt {
 	return []Prompt{
 		{
-			Name:     "imageRepository",
-			Question: "Which docker image repository do you want to use?",
+			Name:     "imageRegistry",
+			Question: "Which docker image registry do you want to use?",
 			Choices:  []string{"ECR", "Nexus"},
 			Default:  "ECR",
 		},
@@ -111,7 +111,7 @@ func InitializeInfraPrompts() []Prompt {
 	allPrompts := []Prompt{}
 	allPrompts = append(allPrompts, InfraProjectName()...)
 	allPrompts = append(allPrompts, InfraContainerPlatform()...)
-	allPrompts = append(allPrompts, InfraRepository()...)
+	allPrompts = append(allPrompts, InfraRegistry()...)
 	allPrompts = append(allPrompts, InfraJenkins()...)
 	allPrompts = append(allPrompts, InfraSonar()...)
 	allPrompts = append(allPrompts, InfraAnchore()...)
