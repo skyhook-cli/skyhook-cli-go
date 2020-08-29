@@ -12,8 +12,8 @@ const filename string = "./Tetherfile"
 Config represents the user's input
 */
 type Config struct {
-	InfraOrApp string            `yaml:"infraOrApp"`
-	Parameters map[string]string `yaml:"parameters"`
+	ProjectType string            `yaml:"projectType"`
+	Parameters  map[string]string `yaml:"parameters"`
 }
 
 /*

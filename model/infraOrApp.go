@@ -5,7 +5,7 @@ InitializeInfraOrApp creates the first prompt
 */
 func InitializeInfraOrApp() Prompt {
 	return Prompt{
-		Name:     "InfraOrApp",
+		Name:     "ProjectType",
 		Question: "Is this an Infrastructure repo or an Application repo?",
 		Choices:  []string{"infra", "app"},
 		Default:  "infra",
