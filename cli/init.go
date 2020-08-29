@@ -2,12 +2,10 @@ package cli
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 
-	"github.com/logrusorgru/aurora"
-
 	"github.com/skyhook-cli/skyhook-cli-go/model"
+	"github.com/skyhook-cli/skyhook-cli-go/service"
 )
 
 /*
@@ -21,28 +19,11 @@ func RunInit() {
 	infraOrApp.ReadResponse(reader)
 
 	config := model.Config{
-		InfraOrApp: infraOrApp.Response,
-		Parameters: make(map[string]string),
-	}
-	var params []model.Prompt
-
-	switch infraOrApp.Response {
-	case "infra":
-		params = model.InitializeInfraPrompts()
-	case "app":
-		params = model.InitializeAppPrompts()
-	default:
-		fmt.Println(aurora.Red("invalid option!"))
-		os.Exit(1)
+		ProjectType: infraOrApp.Response,
+		Parameters:  make(map[string]string),
 	}
 
-	for i := range params {
-		p := &params[i]
-		p.PrintPrompt()
-		p.ReadResponse(reader)
-
-		config.Parameters[p.Name] = p.Response
-	}
+	service.GenerateConfig(&config, reader, infraOrApp.Response)
 
 	config.SaveConfig()
 }
