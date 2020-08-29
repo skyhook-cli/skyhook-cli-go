@@ -81,23 +81,8 @@ node {
 
     stage("GITHUB RELEASE") {
         if (isPushToMaster()) {
-            withCredentials([
-                usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
-            ]) {
-                sh """
-                    curl https://api.github.com/repos/skyhook-cli/skyhook-cli-go/releases \
-                    -H "Authorization: token ${GIT_PASSWORD}" \
-                    -H "Accept: application/vnd.github.v3+json" \
-                    -H "Content-Type: application/json" \
-                    -X POST \
-                    -d '{
-                        "tag_name": "v${VERSION_NUMBER}-release",
-                        "target_commitish": "master",
-                        "name": "Release v${VERSION_NUMBER}",
-                        "body": "'"\$(git log --pretty=%B master...v${OLD_VERSION}-release)"'"
-                    }'
-                """
-            }
+
+            createRelease(OLD_VERSION, VERSION_NUMBER)
 
             def id = getReleaseId()
 
@@ -131,6 +116,26 @@ def getReleaseId() {
             """,
             returnStdout: true
         ).trim()
+    }
+}
+
+def createRelease(oldVersion, newVersion) {
+    withCredentials([
+        usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
+    ]) {
+        sh """
+            curl https://api.github.com/repos/skyhook-cli/skyhook-cli-go/releases \
+            -H "Authorization: token ${GIT_PASSWORD}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d '{
+                "tag_name": "v${newVersion}-release",
+                "target_commitish": "master",
+                "name": "Release v${newVersion}",
+                "body": "'"\$(git log --pretty=%B master...v${oldVersion}-release)"'"
+            }'
+        """
     }
 }
 
