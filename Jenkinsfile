@@ -125,7 +125,7 @@ def createRelease(oldVersion, newVersion) {
     ]) {
         sh """
 
-            commitMessage=\$(git log --pretty=%B master...v${oldVersion}-release | sed -e 's/\"/\\"/g')
+            commitMessage=\$(git log --pretty=%B master...v${oldVersion}-release | sed -e 's/\\"/\\\"/g')
 
             curl https://api.github.com/repos/skyhook-cli/skyhook-cli-go/releases \
             -H "Authorization: token ${GIT_PASSWORD}" \
