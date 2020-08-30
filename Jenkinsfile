@@ -124,9 +124,6 @@ def createRelease(oldVersion, newVersion) {
         usernamePassword(credentialsId: 'git-login', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')
     ]) {
         sh """
-
-            commitMessage=\$(git log --pretty=%B master...v${oldVersion}-release | sed -e 's/\\"/\\\"/g')
-
             curl https://api.github.com/repos/skyhook-cli/skyhook-cli-go/releases \
             -H "Authorization: token ${GIT_PASSWORD}" \
             -H "Accept: application/vnd.github.v3+json" \
@@ -136,7 +133,7 @@ def createRelease(oldVersion, newVersion) {
                 "tag_name": "v${newVersion}-release",
                 "target_commitish": "master",
                 "name": "Release v${newVersion}",
-                "body": "'"\$commitMessage"'"
+                "body": "View the commits in this release at https://github.com/skyhook-cli/skyhook-cli-go/compare/v${oldVersion}-release...v${newVersion}-release"
             }'
         """
     }
