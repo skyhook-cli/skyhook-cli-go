@@ -1,7 +1,10 @@
 package model
 
 import (
+	"fmt"
 	"io/ioutil"
+
+	"github.com/logrusorgru/aurora"
 
 	"gopkg.in/yaml.v2"
 )
@@ -31,18 +34,24 @@ func (c Config) SaveConfig() error {
 /*
 ReadConfig reads the yaml file into the config struct
 */
-func (c Config) ReadConfig() (Config, error) {
+func (c *Config) ReadConfig() error {
 	bytes, err := ioutil.ReadFile(filename)
 
 	if err != nil {
-		return c, err
+		c.ProjectType = ""
+		c.Parameters = make(map[string]string)
+		fmt.Println(aurora.Yellow("Warning: Tetherfile not found, creating new one"))
+		return err
 	}
 
-	err = yaml.Unmarshal(bytes, &c)
+	err = yaml.Unmarshal(bytes, c)
 
 	if err != nil {
-		return c, err
+		c.ProjectType = ""
+		c.Parameters = make(map[string]string)
+		fmt.Println(aurora.Yellow("Warning: there was an error reading the Tetherfile, creating new one"))
+		return err
 	}
 
-	return c, nil
+	return nil
 }

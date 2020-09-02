@@ -12,18 +12,27 @@ import (
 RunInit is the entrypoint for creating a new project
 */
 func RunInit() {
-	infraOrApp := model.InitializeInfraOrApp()
 
 	reader := bufio.NewReader(os.Stdin)
-	infraOrApp.PrintPrompt()
-	infraOrApp.ReadResponse(reader)
 
-	config := model.Config{
-		ProjectType: infraOrApp.Response,
-		Parameters:  make(map[string]string),
+	config := model.Config{}
+	config.ReadConfig()
+
+	projectType := ""
+
+	if len(os.Args) <= 2 {
+		infraOrApp := model.InitializeInfraOrApp()
+		infraOrApp.PrintPrompt()
+		infraOrApp.ReadResponse(reader)
+
+		projectType = infraOrApp.Response
+	} else {
+		projectType = "infra"
 	}
 
-	service.GenerateConfig(&config, reader, infraOrApp.Response)
+	config.ProjectType = projectType
+
+	service.GenerateConfig(&config, reader)
 
 	config.SaveConfig()
 }

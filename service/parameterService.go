@@ -34,9 +34,9 @@ var optionsToComponents map[string]func() []model.Prompt = map[string]func() []m
 /*
 GenerateConfig gets the necessary prompts for the project type and generates the rest of the config struct
 */
-func GenerateConfig(config *model.Config, reader *bufio.Reader, projectType string) {
+func GenerateConfig(config *model.Config, reader *bufio.Reader) {
 
-	prompts := getPrompts(projectType)
+	prompts := getPrompts(config)
 
 	for i := range prompts {
 		p := &prompts[i]
@@ -48,11 +48,11 @@ func GenerateConfig(config *model.Config, reader *bufio.Reader, projectType stri
 
 }
 
-func getPrompts(projectType string) []model.Prompt {
+func getPrompts(config *model.Config) []model.Prompt {
 
-	switch projectType {
+	switch config.ProjectType {
 	case "infra":
-		return infraPrompts()
+		return infraPrompts(config)
 	case "app":
 		return model.InitializeAppPrompts()
 	default:
@@ -60,12 +60,14 @@ func getPrompts(projectType string) []model.Prompt {
 	}
 }
 
-func infraPrompts() []model.Prompt {
+func infraPrompts(config *model.Config) []model.Prompt {
 	if len(os.Args) > 2 {
 
 		prompts := []model.Prompt{}
 
-		prompts = append(prompts, model.InfraProjectName()...)
+		if _, ok := config.Parameters["projectName"]; !ok {
+			prompts = append(prompts, model.InfraProjectName()...)
+		}
 
 		for _, v := range os.Args[2:] {
 			f, ok := optionsToComponents[v]
